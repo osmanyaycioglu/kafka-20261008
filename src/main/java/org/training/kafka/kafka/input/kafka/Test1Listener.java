@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ArrayBlockingQueue;
@@ -23,16 +24,24 @@ public class Test1Listener {
     private Executor executor;
 
     // @PostConstruct
-    public void init(){
+    public void init() {
         for (int i = 0; i < 10; i++) {
             WorkerThread workerThreadLoc = new WorkerThread();
             workerThreadLoc.start();
         }
     }
 
-    @KafkaListener(id = "test1-client",topics = "test1", groupId = "sgroup1",concurrency = "3",clientIdPrefix = "myClient")
-    public void listenTest1Message(String value) {
-        System.out.println("Received Message test1 : " + value + " Thread : " + Thread.currentThread().getName());
+    @KafkaListener(id = "test1-client",
+            topics = "test1",
+            groupId = "sgroup1",
+            concurrency = "3",
+            clientIdPrefix = "myClient",
+            ackMode = "MANUAL_IMMEDIATE")
+    public void listenTest1Message(String value,
+                                   Acknowledgment acknowledgmentParam) {
+        System.out.println("Received Message test1 : " + value + " Thread : " + Thread.currentThread()
+                                                                                      .getName());
+        acknowledgmentParam.acknowledge();
     }
 
     //  @KafkaListener(topics = "test2", groupId = "sgroup1",concurrency = "3")
@@ -55,12 +64,13 @@ public class Test1Listener {
 
         @Override
         public void run() {
-            while (true){
+            while (true) {
                 try {
                     String message = strings.take();
                     System.out.println("Message processed : " + message);
                 } catch (Exception eParam) {
-                    logger.error("[WorkerThread][run]-> *Error* : " + eParam.getMessage(),eParam);
+                    logger.error("[WorkerThread][run]-> *Error* : " + eParam.getMessage(),
+                                 eParam);
                 }
             }
         }
