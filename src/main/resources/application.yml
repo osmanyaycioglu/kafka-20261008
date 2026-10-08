@@ -1,3 +1,20 @@
 spring:
-    application:
-        name: kafka-20261008
+  application:
+    name: kafka-profect
+  kafka:
+    consumer:
+      auto-offset-reset: earliest
+      bootstrap-servers: 127.0.0.1:29092
+      enable-auto-commit: false
+      group-id: spring-group-1
+      key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      acks: 0
+      bootstrap-servers: 127.0.0.1:29092
+      key-serializer: org.apache.kafka.common.serialization.IntegerSerializer
+      retries: 0
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    listener:
+      ack-count: 10
+      ack-time: 100ms
