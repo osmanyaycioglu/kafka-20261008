@@ -1,9 +1,6 @@
 package org.training.kafka.kafka.java;
 
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.clients.producer.RecordMetadata;
+import org.apache.kafka.clients.producer.*;
 import org.apache.kafka.common.serialization.IntegerSerializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
@@ -29,10 +26,13 @@ public class JavaKafkaProducer {
                   IntegerSerializer.class.getName());
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
                   StringSerializer.class.getName());
+        props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG,
+                  RoundRobinPartitioner.class.getName());
+
 
         KafkaProducer<Integer, String> producer   = new KafkaProducer<>(props);
         List<Future<RecordMetadata>>   futuresLoc = new ArrayList<>(1_100);
-        for (int i = 1; i <= 1_000; i++) {
+        for (int i = 1; i <= 10_000; i++) {
             Future<RecordMetadata> sendLoc = producer.send(new ProducerRecord<>("first1",
                                                                                 i,
                                                                                 "Simple Message-" + i));
