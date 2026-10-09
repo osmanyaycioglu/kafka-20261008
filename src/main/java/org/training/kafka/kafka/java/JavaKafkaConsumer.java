@@ -45,6 +45,8 @@ public class JavaKafkaConsumer {
                           20_000);
         propertiesLoc.put(ConsumerConfig.FETCH_MAX_BYTES_CONFIG,
                           (100 * 1024 * 1024 ));
+        propertiesLoc.put(ConsumerConfig.MAX_PARTITION_FETCH_BYTES_CONFIG,
+                          (50 * 1024 * 1024 ));
 
 
 //        try (KafkaConsumer<Integer, String> kafkaConsumerLoc = new KafkaConsumer<>(propertiesLoc)) {
