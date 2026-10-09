@@ -32,11 +32,15 @@ public class JavaKafkaProducer {
 
         KafkaProducer<Integer, String> producer   = new KafkaProducer<>(props);
         List<Future<RecordMetadata>>   futuresLoc = new ArrayList<>(1_100);
-        for (int i = 1; i <= 10_000; i++) {
-            Future<RecordMetadata> sendLoc = producer.send(new ProducerRecord<>("first1",
+        for (int i = 1; i <= 100_000; i++) {
+            Future<RecordMetadata> sendLoc = producer.send(new ProducerRecord<>("test1",
                                                                                 i,
                                                                                 "Simple Message-" + i));
             futuresLoc.add(sendLoc);
+            try {
+                Thread.sleep(1);
+            } catch (Exception exp) {
+            }
 
         }
 
